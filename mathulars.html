@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <style type="text/css">
+        @media print
+        {
+            .no-print, .no-print *
+            {
+                display: none !important;
+            }
+        }
+        #chooser-div {
+            float: right;
+            width: 100%
+        }
+    </style>
+  </head>
+  <body>
+    <div class="no-print">
+      <select id="chooser">
+        <option id="proto-choice"></option>
+      </select>
+    </div>
+    <div id="name-and-date">
+    </div>
+    <div id="field-de-mathular">
+      <table>
+          <tr> <td></td> <td></td> </tr>
+          <tr> <td></td> <td></td> </tr>
+          <tr> <td></td> <td></td> </tr>
+          <tr> <td></td> <td></td> </tr>
+          <tr> <td></td> <td></td> </tr>
+          <tr> <td></td> <td></td> </tr>
+      </table>
+    </div>
+  </body>
+  <script src="mathulars.js"></script>
+  <script>
+    var chooser = document.getElementById("chooser");
+
+    function remathulate() {
+        mathulars.mathulate(
+            // XXX this is a bit mix-and-match
+            document.getElementById("field-de-mathular"), "td", chooser.value
+        );
+    }
+
+    chooser.addEventListener('change', (event) => {
+        remathulate();
+    });
+    var proto  = document.getElementById("proto-choice");
+    for (const opt of mathulars.possibleWays()) {
+        var newch = proto.cloneNode(true);
+        newch.value = opt;
+        newch.innerText = opt;
+        chooser.append(newch);
+    }
+    proto.remove();
+
+    // generate some problems so we can see:
+    remathulate();
+
+  </script>
+</html>
+
