@@ -81,7 +81,7 @@
         remathulate();
     });
     var proto  = document.getElementById("proto-choice");
-    for (const opt of mathulars.possibleWays()) {
+    for (const opt of mathulars.problemTypes()) {
         var newch = proto.cloneNode(true);
         newch.value = opt;
         newch.innerText = opt;

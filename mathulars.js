@@ -54,7 +54,7 @@ var mathulars = function() {
 
     return {
 
-        possibleWays: function() {
+        problemTypes: function() {
             return Object.keys(mathulators);
         },
 
