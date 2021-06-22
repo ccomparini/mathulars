@@ -5,7 +5,8 @@
         {
             .no-print, .no-print *
             {
-                display: none !important;
+                display: none;
+                visibility: hidden;
             }
         }
         body {
@@ -21,7 +22,8 @@
             margin-left: .75in;
             margin-top: .75in;
             width: 7in;
-            height: 9.5in;
+            padding: 0;
+            border: 0;
         }
         #chooser-div {
             float: right;
@@ -33,9 +35,11 @@
             justify-content: space-between;
             width: 60%;
             height: 1in;
+            padding: 0;
         }
         #field-de-mathular {
             height: 8in;
+            padding: 0;
         }
         #field-de-mathular td {
             text-align: right;
@@ -45,7 +49,7 @@
   <body>
     <div class="no-print">
       <select id="chooser">
-        <option disabled="disabled" selected="selected">Choose your mathularity</option>
+        <option disabled="disabled" selected="selected">-- choose problem type --</option>
         <option id="proto-choice"></option>
       </select>
     </div>
@@ -70,17 +74,8 @@
   <script src="mathulars.js"></script>
   <script>
     var chooser = document.getElementById("chooser");
+    var proto   = document.getElementById("proto-choice");
 
-    function remathulate() {
-        mathulars.mathulate(
-            document.getElementById("field-de-mathular"), "td", chooser.value
-        );
-    }
-
-    chooser.addEventListener('change', (event) => {
-        remathulate();
-    });
-    var proto  = document.getElementById("proto-choice");
     for (const opt of mathulars.problemTypes()) {
         var newch = proto.cloneNode(true);
         newch.value = opt;
@@ -89,6 +84,9 @@
     }
     proto.remove();
 
+    chooser.addEventListener('change', (event) => {
+        mathulars.fillElements("td", chooser.value);
+    });
 
   </script>
 </html>

@@ -13,7 +13,6 @@ var mathulars = function() {
         return ops;
     }
 
-    // these are pseudo-methods of Mathulator:
     var mathulators = {
         "addition": function(el) {
             mathulate(el, operands(2, 1, 1000).join(' + '));
@@ -54,14 +53,23 @@ var mathulars = function() {
 
     return {
 
+        /**
+           Returns a list containing the names of the supported
+           problem types.
+         */
         problemTypes: function() {
             return Object.keys(mathulators);
         },
 
-        mathulate: function(within, sel, how) {
-            var els = within.querySelectorAll(sel);
+        /**
+           Fills the text content of the elements specified by
+           the (css) selector passed with problems of the type
+           specified by "problemType".
+         */
+        fillElements: function(selector, problemType, within = document) {
+            var els = within.querySelectorAll(selector);
             els.forEach(function(el) {
-                mathulators[how](el);
+                mathulators[problemType](el);
             });
         },
     };
