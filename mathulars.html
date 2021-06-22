@@ -8,30 +8,64 @@
                 display: none !important;
             }
         }
+        body {
+            /*
+              we're assuming US 8.5" x 11" paper.
+              the only reason I'm effing with this by hand is
+              otherwise chrome won't put the page in the printable
+              part of the paper.
+              uhh..  ok doing all the printable sections of this in inches
+              for the same reasons.  seems to be the only way to get 
+              it to print right.
+             */
+            margin-left: .75in;
+            margin-top: .75in;
+            width: 7in;
+            height: 9.5in;
+        }
         #chooser-div {
             float: right;
-            width: 100%
+            width: 100%;
+        }
+        #name-and-date {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 60%;
+            height: 1in;
+        }
+        #field-de-mathular {
+            height: 8in;
+        }
+        #field-de-mathular td {
+            text-align: right;
         }
     </style>
   </head>
   <body>
     <div class="no-print">
       <select id="chooser">
+        <option disabled="disabled" selected="selected">Choose your mathularity</option>
         <option id="proto-choice"></option>
       </select>
     </div>
     <div id="name-and-date">
+        <span>Name:_______________________</span><span>Date:______________</span>
     </div>
-    <div id="field-de-mathular">
-      <table>
-          <tr> <td></td> <td></td> </tr>
-          <tr> <td></td> <td></td> </tr>
-          <tr> <td></td> <td></td> </tr>
-          <tr> <td></td> <td></td> </tr>
-          <tr> <td></td> <td></td> </tr>
-          <tr> <td></td> <td></td> </tr>
-      </table>
-    </div>
+    <table id="field-de-mathular" width="100%">
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+        <tr> <td></td> <td></td> <td></td> </tr>
+    </table>
   </body>
   <script src="mathulars.js"></script>
   <script>
@@ -39,7 +73,6 @@
 
     function remathulate() {
         mathulars.mathulate(
-            // XXX this is a bit mix-and-match
             document.getElementById("field-de-mathular"), "td", chooser.value
         );
     }
@@ -56,8 +89,6 @@
     }
     proto.remove();
 
-    // generate some problems so we can see:
-    remathulate();
 
   </script>
 </html>
