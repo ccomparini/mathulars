@@ -13,12 +13,37 @@ var mathulars = function() {
         return ops;
     }
 
+    var already_done = { };
+    function already_done_key(ops, within) {
+        var parts = ops.map((x) => x); // array copy
+        parts.sort();
+        parts.push(within);
+        return parts.join('.');
+    }
+
+    // not totally guaranteed to be unique...
+    function unique_operands(how_many, min, range, within) {
+        var ops, key;
+        var attempts = 0; // try up to 10 times to get a unique set of operands
+        do {
+            ops = operands(how_many, min, range);
+            key = already_done_key(ops, within);
+        } while(already_done[key] && ++attempts < 10);
+        already_done[key] = true;
+
+        return ops;
+    }
+
+    function reset_mathulators() {
+        already_done = { };
+    }
+
     var mathulators = {
         "addition": function(el) {
-            mathulate(el, operands(2, 1, 1000).join(' + '));
+            mathulate(el, unique_operands(2, 1, 1000, '+').join(' + '));
         },
         "subtraction": function(el) {
-            var ops = operands(2, 1, 1000);
+            var ops = unique_operands(2, 1, 1000, '-');
             if(ops[0] < ops[1]) {
                 // keep it positive:
                 var tmp = ops[0];
@@ -28,10 +53,10 @@ var mathulars = function() {
             mathulate(el, ops.join(' - '));
         },
         "multiplication": function(el) {
-            mathulate(el, operands(2, 2, 12).join(' x '));
+            mathulate(el, unique_operands(2, 2, 12, 'x').join(' x '));
         },
         "division": function(el) {
-            var ops = operands(2, 2, 12);
+            var ops = unique_operands(2, 2, 12, '÷');
             ops[0] = ops[0] * ops[1];
             mathulate(el, ops.join(' ÷ '));
         },
@@ -67,6 +92,7 @@ var mathulars = function() {
            specified by "problemType".
          */
         fillElements: function(selector, problemType, within = document) {
+            reset_mathulators();
             var els = within.querySelectorAll(selector);
             els.forEach(function(el) {
                 mathulators[problemType](el);
