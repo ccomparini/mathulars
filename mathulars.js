@@ -5,10 +5,10 @@ var mathulars = function() {
         el.textContent = prob + ' = __________';
     }
     
-    function operands(how_many, min, range) {
+    function operands(how_many, min, max) {
         var ops = new Array();
         for(var ind = 0; ind < how_many; ind++) {
-            ops[ind] = min + Math.floor(Math.random() * (range-min));
+            ops[ind] = min + Math.floor(Math.random() * (max - min + 1));
         }
         return ops;
     }
@@ -21,12 +21,13 @@ var mathulars = function() {
         return parts.join('.');
     }
 
-    // not totally guaranteed to be unique...
-    function unique_operands(how_many, min, range, within) {
+    // not totally guaranteed to be unique, but guaranteed to
+    // terminate.  ;)
+    function unique_operands(how_many, min, max, within) {
         var ops, key;
         var attempts = 0; // try up to 10 times to get a unique set of operands
         do {
-            ops = operands(how_many, min, range);
+            ops = operands(how_many, min, max);
             key = already_done_key(ops, within);
         } while(already_done[key] && ++attempts < 10);
         already_done[key] = true;
@@ -45,7 +46,7 @@ var mathulars = function() {
         "subtraction": function(el) {
             var ops = unique_operands(2, 1, 1000, '-');
             if(ops[0] < ops[1]) {
-                // keep it positive:
+                // swap so the result is positive:
                 var tmp = ops[0];
                 ops[0] = ops[1];
                 ops[1] = tmp;
@@ -56,6 +57,10 @@ var mathulars = function() {
             mathulate(el, unique_operands(2, 2, 12, 'x').join(' x '));
         },
         "division": function(el) {
+            // to get whole numbers only (and multiples of
+            // 2-12) we generate 2 random factors and then
+            // make the first operand be the product of the
+            // 2 randoms:
             var ops = unique_operands(2, 2, 12, '÷');
             ops[0] = ops[0] * ops[1];
             mathulate(el, ops.join(' ÷ '));
