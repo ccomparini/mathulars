@@ -103,6 +103,8 @@ var mathulars = function() {
                 mathulators[problemType](el);
             });
         },
+
+        operands: operands,
     };
 }();
 
