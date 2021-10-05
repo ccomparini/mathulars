@@ -40,45 +40,62 @@ var mathulars = function() {
     }
 
     var mathulators = {
-        "addition": function(el) {
-            mathulate(el, unique_operands(2, 1, 1000, '+').join(' + '));
+        "addition": {
+            fill: function(el) {
+                mathulate(el, unique_operands(2, 1, 1000, '+').join(' + '));
+            },
         },
-        "subtraction": function(el) {
-            var ops = unique_operands(2, 1, 1000, '-');
-            if(ops[0] < ops[1]) {
-                // swap so the result is positive:
-                var tmp = ops[0];
-                ops[0] = ops[1];
-                ops[1] = tmp;
-            }
-            mathulate(el, ops.join(' - '));
+        "subtraction": {
+            fill: function(el) {
+                var ops = unique_operands(2, 1, 1000, '-');
+                if(ops[0] < ops[1]) {
+                    // swap so the result is positive:
+                    var tmp = ops[0];
+                    ops[0] = ops[1];
+                    ops[1] = tmp;
+                }
+                mathulate(el, ops.join(' - '));
+            },
         },
-        "multiplication": function(el) {
-            mathulate(el, unique_operands(2, 2, 12, 'x').join(' x '));
+        "multiplication": {
+            fill: function(el) {
+                mathulate(el, unique_operands(2, 2, 12, 'x').join(' x '));
+            },
         },
-        "division": function(el) {
-            // to get whole numbers only (and multiples of
-            // 2-12) we generate 2 random factors and then
-            // make the first operand be the product of the
-            // 2 randoms:
-            var ops = unique_operands(2, 2, 12, '÷');
-            ops[0] = ops[0] * ops[1];
-            mathulate(el, ops.join(' ÷ '));
+        "multi-digit multiplication": {
+            fill: function(el) {
+                mathulate(el, unique_operands(2, 10, 1000, 'x').join(' x '));
+            },
         },
-        "addition and subtraction": function(el) {
-            if(Math.random() < 0.5) {
-                mathulators["addition"](el);
-            } else {
-                mathulators["subtraction"](el);
-            }
+        "division": {
+            fill: function(el) {
+                // to get whole numbers only (and multiples of
+                // 2-12) we generate 2 random factors and then
+                // make the first operand be the product of the
+                // 2 randoms:
+                var ops = unique_operands(2, 2, 12, '÷');
+                ops[0] = ops[0] * ops[1];
+                mathulate(el, ops.join(' ÷ '));
+            },
         },
-        "multiplication and division": function(el) {
-            if(Math.random() < 0.5) {
-                mathulators["multiplication"](el);
-            } else {
-                mathulators["division"](el);
-            }
-        }
+        "addition and subtraction": {
+            fill: function(el) {
+                if(Math.random() < 0.5) {
+                    mathulators["addition"].fill(el);
+                } else {
+                    mathulators["subtraction"].fill(el);
+                }
+            },
+        },
+        "multiplication and division": {
+            fill: function(el) {
+                if(Math.random() < 0.5) {
+                    mathulators["multiplication"].fill(el);
+                } else {
+                    mathulators["division"].fill(el);
+                }
+            },
+        },
     };
 
     return {
@@ -100,7 +117,7 @@ var mathulars = function() {
             reset_mathulators();
             var els = within.querySelectorAll(selector);
             els.forEach(function(el) {
-                mathulators[problemType](el);
+                mathulators[problemType].fill(el);
             });
         },
 
