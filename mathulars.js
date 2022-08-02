@@ -21,13 +21,14 @@ var mathulars = function() {
         return parts.join('.');
     }
 
+    // returns an array of 2 "unique" operands for a problem.
     // not totally guaranteed to be unique, but guaranteed to
     // terminate.  ;)
-    function unique_operands(how_many, min, max, within) {
+    function unique_operands(min, max, within) {
         var ops, key;
         var attempts = 0; // try up to 10 times to get a unique set of operands
         do {
-            ops = operands(how_many, min, max);
+            ops = operands(2, min, max);
             key = already_done_key(ops, within);
         } while(already_done[key] && ++attempts < 10);
         already_done[key] = true;
@@ -42,12 +43,12 @@ var mathulars = function() {
     var mathulators = {
         "addition": {
             fill: function(el) {
-                mathulate(el, unique_operands(2, 1, 1000, '+').join(' + '));
+                mathulate(el, unique_operands(1, 1000, '+').join(' + '));
             },
         },
         "subtraction": {
             fill: function(el) {
-                var ops = unique_operands(2, 1, 1000, '-');
+                var ops = unique_operands(1, 1000, '-');
                 if(ops[0] < ops[1]) {
                     // swap so the result is positive:
                     var tmp = ops[0];
@@ -59,12 +60,12 @@ var mathulars = function() {
         },
         "multiplication": {
             fill: function(el) {
-                mathulate(el, unique_operands(2, 2, 12, 'x').join(' x '));
+                mathulate(el, unique_operands(2, 12, 'x').join(' x '));
             },
         },
         "multi-digit multiplication": {
             fill: function(el) {
-                mathulate(el, unique_operands(2, 10, 1000, 'x').join(' x '));
+                mathulate(el, unique_operands(10, 1000, 'x').join(' x '));
             },
             max_probs_factor: .25,
         },
@@ -74,7 +75,7 @@ var mathulars = function() {
                 // 2-12) we generate 2 random factors and then
                 // make the first operand be the product of the
                 // 2 randoms:
-                var ops = unique_operands(2, 2, 12, '÷');
+                var ops = unique_operands(2, 12, '÷');
                 ops[0] = ops[0] * ops[1];
                 mathulate(el, ops.join(' ÷ '));
             },
