@@ -85,7 +85,8 @@
     proto.remove();
 
     chooser.addEventListener('change', (event) => {
-        mathulars.fillElements("#field-de-mathular td", chooser.value);
+        window.location.search = "?type=" + chooser.value;
+
     });
 
     var sstr = location.search.substr(1);
@@ -94,7 +95,7 @@
             var pair = mem.split('=');
             if(pair[0] === "type") {
                 chooser.value = decodeURIComponent(pair[1]);
-                chooser.dispatchEvent(new Event('change'));
+                mathulars.fillElements("#field-de-mathular td", chooser.value);
             }
         }
     }
