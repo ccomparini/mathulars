@@ -76,7 +76,7 @@
     var chooser = document.getElementById("chooser");
     var proto   = document.getElementById("proto-choice");
 
-    for (const opt of mathulars.problemTypes()) {
+    for(const opt of mathulars.problemTypes()) {
         var newch = proto.cloneNode(true);
         newch.value = opt;
         newch.innerText = opt;
@@ -87,6 +87,17 @@
     chooser.addEventListener('change', (event) => {
         mathulars.fillElements("td", chooser.value);
     });
+
+    var sstr = location.search.substr(1);
+    if(sstr) {
+        for(const mem of sstr.split('&')) {
+            var pair = mem.split('=');
+            if(pair[0] === "type") {
+                chooser.value = decodeURIComponent(pair[1]);
+                chooser.dispatchEvent(new Event('change'));
+            }
+        }
+    }
 
   </script>
 </html>
