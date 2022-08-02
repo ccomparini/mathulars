@@ -66,6 +66,7 @@ var mathulars = function() {
             fill: function(el) {
                 mathulate(el, unique_operands(2, 10, 1000, 'x').join(' x '));
             },
+            max_probs_factor: .25,
         },
         "division": {
             fill: function(el) {
@@ -115,10 +116,23 @@ var mathulars = function() {
          */
         fillElements: function(selector, problemType, within = document) {
             reset_mathulators();
+            var mather = mathulators[problemType];
+
             var els = within.querySelectorAll(selector);
-            els.forEach(function(el) {
-                mathulators[problemType].fill(el);
-            });
+            var num_done = 0;
+            var num_to_do = els.length;
+            if(mather.max_probs_factor !== undefined)
+                num_to_do *= mather.max_probs_factor;
+
+            for(var elind = 0; elind < els.length; elind++) {
+                var el = els[elind];
+                if(num_done < num_to_do) {
+                    mather.fill(el);
+                    num_done++;
+                } else {
+                    el.textContent = ' ';
+                }
+            }
         },
 
         operands: operands,
