@@ -21,7 +21,8 @@ var mathulars = function() {
         return parts.join('.');
     }
 
-    // returns an array of 2 "unique" operands for a problem.
+    // returns an array of 2 "unique" (since the last time reset_mathulators()
+    // was called) operands for a problem.
     // not totally guaranteed to be unique, but guaranteed to
     // terminate.  ;)
     function unique_operands(min, max, within) {
@@ -63,12 +64,6 @@ var mathulars = function() {
                 mathulate(el, unique_operands(2, 12, 'x').join(' x '));
             },
         },
-        "multi-digit multiplication": {
-            fill: function(el) {
-                mathulate(el, unique_operands(10, 1000, 'x').join(' x '));
-            },
-            max_probs_factor: .25,
-        },
         "division": {
             fill: function(el) {
                 // to get whole numbers only (and multiples of
@@ -79,6 +74,35 @@ var mathulars = function() {
                 ops[0] = ops[0] * ops[1];
                 mathulate(el, ops.join(' ÷ '));
             },
+        },
+        "multi-digit multiplication": {
+            fill: function(el) {
+                mathulate(el, unique_operands(10, 1000, 'x').join(' x '));
+            },
+            max_probs_factor: .25,
+        },
+        "multi-digit division": {
+            // going into 5th grade they are supposed to be able to do
+            // "Dividing a three- or four-digit number by a two digit
+            // divisor using partial quotients or the standard long
+            // division algorithm".  I'm going to not worry if they
+            // are unique, here.
+            fill: function(el) {
+                // ... so always a 2 digit divisor:
+                var divisor = operands(1, 10, 99);
+
+                // instead of the dividend just being in the range
+                // 100 - 9999, let's make it roughly 50/50 3 digit
+                // and 4 digit (so it's not so intimidating):
+                if(Math.random() < 0.5) {
+                    // (3 digit)
+                    mathulate(el, operands(1, 100, 999) + ' ÷ ' + divisor);
+                } else {
+                    // (4 digit)
+                    mathulate(el, operands(1, 1000, 9999) + ' ÷ ' + divisor);
+                }
+            },
+            max_probs_factor: 1/6, // awkward! shipit.
         },
         "addition and subtraction": {
             fill: function(el) {
