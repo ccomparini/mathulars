@@ -11,16 +11,16 @@ var mathulars = function() {
     }
 
     function operands(how_many, min, max) {
-        var ops = new Array();
-        for(var ind = 0; ind < how_many; ind++) {
+        let ops = new Array();
+        for(let ind = 0; ind < how_many; ind++) {
             ops[ind] = randint(min, max);
         }
         return ops;
     }
 
-    var already_done = { };
+    let already_done = { };
     function already_done_key(ops, within) {
-        var parts = ops.map((x) => x); // array copy
+        let parts = ops.map((x) => x); // array copy
         parts.sort();
         parts.push(within);
         return parts.join('.');
@@ -31,8 +31,8 @@ var mathulars = function() {
     // not totally guaranteed to be unique, but guaranteed to
     // terminate.  ;)
     function unique_operands(min, max, within) {
-        var ops, key;
-        var attempts = 0; // try up to 10 times to get a unique set of operands
+        let ops, key;
+        let attempts = 0; // try up to 10 times to get a unique set of operands
         do {
             ops = operands(2, min, max);
             key = already_done_key(ops, within);
@@ -93,10 +93,10 @@ var mathulars = function() {
         },
         "subtraction": {
             fill: function(el) {
-                var ops = unique_operands(1, 1000, '-');
+                let ops = unique_operands(1, 1000, '-');
                 if(ops[0] < ops[1]) {
                     // swap so the result is positive:
-                    var tmp = ops[0];
+                    let tmp = ops[0];
                     ops[0] = ops[1];
                     ops[1] = tmp;
                 }
@@ -114,7 +114,7 @@ var mathulars = function() {
                 // 2-12) we generate 2 random factors and then
                 // make the first operand be the product of the
                 // 2 randoms:
-                var ops = unique_operands(2, 12, '÷');
+                let ops = unique_operands(2, 12, '÷');
                 ops[0] = ops[0] * ops[1];
                 mathulate(el, ops.join(' ÷ '));
             },
@@ -133,7 +133,7 @@ var mathulars = function() {
             // are unique, here.
             fill: function(el) {
                 // ... so always a 2 digit divisor:
-                var divisor = operands(1, 10, 99);
+                let divisor = operands(1, 10, 99);
 
                 // instead of the dividend just being in the range
                 // 100 - 9999, let's make it roughly 50/50 3 digit
@@ -185,16 +185,16 @@ var mathulars = function() {
          */
         fillElements: function(selector, problemType, within = document) {
             reset_mathulators();
-            var mather = mathulators[problemType];
+            let mather = mathulators[problemType];
 
-            var els = within.querySelectorAll(selector);
-            var num_done = 0;
-            var num_to_do = els.length;
+            let els = within.querySelectorAll(selector);
+            let num_done = 0;
+            let num_to_do = els.length;
             if(mather.max_probs_factor !== undefined)
                 num_to_do *= mather.max_probs_factor;
 
-            for(var elind = 0; elind < els.length; elind++) {
-                var el = els[elind];
+            for(let elind = 0; elind < els.length; elind++) {
+                let el = els[elind];
                 if(num_done < num_to_do) {
                     mather.fill(el);
                     num_done++;
