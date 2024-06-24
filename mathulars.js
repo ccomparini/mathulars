@@ -49,6 +49,7 @@ var mathulars = function() {
     const algebraIOps = [ ' + ', ' - ', ' * ', '/' ];
     const mathulators = {
         "algebra I": {
+            instructions: "Solve for x.",
             fill: function(el) {
                 // let's say for "algebra I" it's just a x someplace
                 // and some constants and expect the kid to solve
@@ -178,14 +179,25 @@ var mathulars = function() {
             return Object.keys(mathulators);
         },
 
+        instructions: function(problemType) {
+            return mathulators[problemType]?.instructions;
+        },
+
         /**
            Fills the text content of the elements specified by
            the (css) selector passed with problems of the type
            specified by "problemType".
          */
         fillElements: function(selector, problemType, within = document) {
+            if(!problemType) return;
+
             reset_mathulators();
             let mather = mathulators[problemType];
+
+            if(!mather) {
+                console.warn(`no such problem type '${problemType}'`);
+                return;
+            }
 
             let els = within.querySelectorAll(selector);
             let num_done = 0;

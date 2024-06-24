@@ -45,6 +45,16 @@
         #field-de-mathular td {
             text-align: center;
         }
+        .centered-text-div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        #instructions {
+            font-weight: bold;
+            background-color: #ddd;
+        }
     </style>
   </head>
   <body>
@@ -57,6 +67,7 @@
     <div id="name-and-date">
         <span>Name:_______________________</span><span>Date:______________</span>
     </div>
+    <div id="instructions" class="centered-text-div"> </div>
     <table id="field-de-mathular">
         <tr> <td></td> <td></td> <td></td> </tr>
         <tr> <td></td> <td></td> <td></td> </tr>
@@ -74,11 +85,11 @@
   </body>
   <script src="mathulars.js"></script>
   <script>
-    var chooser = document.getElementById("chooser");
-    var proto   = document.getElementById("proto-choice");
+    let chooser = document.getElementById("chooser");
+    let proto   = document.getElementById("proto-choice");
 
     for(const opt of mathulars.problemTypes()) {
-        var newch = proto.cloneNode(true);
+        let newch = proto.cloneNode(true);
         newch.value = opt;
         newch.innerText = opt;
         chooser.append(newch);
@@ -90,12 +101,19 @@
 
     });
 
-    var sstr = location.search.substr(1);
+    let sstr = location.search.substr(1);
     if(sstr) {
         for(const mem of sstr.split('&')) {
-            var pair = mem.split('=');
+            let pair = mem.split('=');
             if(pair[0] === "type") {
                 chooser.value = decodeURIComponent(pair[1]);
+                let instr = mathulars.instructions(chooser.value)
+                if(instr) {
+                    let instDisp = document.getElementById("instructions");
+                    if(instDisp) {
+                        instDisp.textContent = instr;
+                    }
+                }
                 mathulars.fillElements("#field-de-mathular td", chooser.value);
             }
         }
