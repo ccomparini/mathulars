@@ -1,14 +1,19 @@
+"use strict";
 
 var mathulars = function() {
 
     function mathulate(el, prob) {
         el.textContent = prob + ' = __________';
     }
-    
+
+    function randint(min, max) {
+        return min + Math.floor(Math.random() * (max - min + 1));
+    }
+
     function operands(how_many, min, max) {
         var ops = new Array();
         for(var ind = 0; ind < how_many; ind++) {
-            ops[ind] = min + Math.floor(Math.random() * (max - min + 1));
+            ops[ind] = randint(min, max);
         }
         return ops;
     }
@@ -41,7 +46,46 @@ var mathulars = function() {
         already_done = { };
     }
 
-    var mathulators = {
+    const algebraIOps = [ ' + ', ' - ', ' * ', '/' ];
+    const mathulators = {
+        "algebra I": {
+            fill: function(el) {
+                // let's say for "algebra I" it's just a x someplace
+                // and some constants and expect the kid to solve
+                // for x.  no quadratics or anything - very simple.
+                // uhh also just 3 terms.
+                // more complex can go in II.
+                // the html makes a lot of problems anyway.
+                const terms = operands(3, 1, 100);
+                const eqAfter = randint(0, terms.length - 2); // where the '=' is
+
+                // the 'x' goes on the side with more terms:
+                if(eqAfter < Math.floor(terms.length/2)) {
+                    terms[randint(eqAfter + 1, terms.length - 1)] = 'x';
+                } else {
+                    terms[randint(0, eqAfter - 1)] = 'x';
+                }
+
+                // division is visually confusing the way I
+                // have this layed out at the moment, so
+                // we're going to have at most 1 division:
+                let gotDiv = false;
+                for(let termi = 0; termi < terms.length; termi++) {
+                    if(termi === eqAfter) {
+                        el.textContent += `${terms[termi]} = `;
+                    } else if(termi < terms.length - 1) {
+                        let op = algebraIOps[randint(0, algebraIOps.length - 1)];
+                        if(op === '/') {
+                            if(gotDiv) op = ' * ';
+                            gotDiv = true;
+                        }
+                        el.textContent += `${terms[termi]}${op}`;
+                    } else {
+                        el.textContent += terms[termi];
+                    }
+                }
+            },
+        },
         "addition": {
             fill: function(el) {
                 mathulate(el, unique_operands(1, 1000, '+').join(' + '));
